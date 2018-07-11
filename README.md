@@ -29,6 +29,12 @@ Verify the gem was installed and tasks are available:
 
     $ bundle exec cap -T | grep opscomplete
 
+Optional: If you want to manage ruby versions for certain roles, set `rbenv_roles` in your `deploy.rb`:
+
+```ruby
+set :rbenv_roles, :app
+```
+
 You might also want to configure some hooks, see [using capistrano hooks](#using-capistrano-hooks).
 
 ## Usage
