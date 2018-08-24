@@ -27,7 +27,7 @@ require 'capistrano/opscomplete'
 
 Verify the gem was installed and tasks are available:
 
-    $ bundle exec cap -T | grep opscomplete
+    $ bundle exec cap -T opscomplete
 
 Optional: If you want to manage ruby versions for certain roles, set `rbenv_roles` in your `deploy.rb`:
 
