@@ -54,7 +54,7 @@ namespace :opscomplete do
       on roles fetch(:rbenv_roles) do
         next if test(:rbenv, :exec, :gem, :query, '--quiet --installed --name-matches ^bundler$')
         execute(:rbenv, :exec, :gem, :install, :bundler, '--quiet --no-rdoc --no-ri')
-        invoke!('opscomplete:ruby:rehash')
+        set :rbenv_needs_rehash, true
       end
     end
 
@@ -63,7 +63,7 @@ namespace :opscomplete do
       on roles fetch(:rbenv_roles) do
         next if test(:rbenv, :exec, :gem, :query, '--quiet --installed --name-matches ^geordi$')
         execute(:rbenv, :exec, :gem, :install, :geordi, '--quiet --no-rdoc --no-ri')
-        invoke!('opscomplete:ruby:rehash')
+        set :rbenv_needs_rehash, true
       end
     end
 
@@ -81,7 +81,7 @@ namespace :opscomplete do
             warn('Required ruby version is not installed, but available for installation.')
             info("Installing ruby #{app_ruby_version}.")
             execute(:rbenv, :install, app_ruby_version)
-            invoke!('opscomplete:ruby:rehash')
+            set :rbenv_needs_rehash, true
           else
             raise Capistrano::ValidationError,
                   'Ruby version required by application is neither installed nor installable using ruby-install.'
@@ -91,6 +91,7 @@ namespace :opscomplete do
       end
       invoke('opscomplete:ruby:install_bundler')
       invoke('opscomplete:ruby:install_geordi')
+      invoke('opscomplete:ruby:rehash') if fetch(:rbenv_needs_rehash, false)
     end
   end
 
