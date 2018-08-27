@@ -19,12 +19,24 @@ module Capistrano
       end
 
       def app_ruby_version
-        app_ruby_version_file_path = release_path.join('.ruby-version').to_s
+        release_ruby_version_file_path = release_path.join('.ruby-version').to_s
+
+        # 1) Get version from capistrano configuration (highest precedence, 'override')
         if fetch(:opscomplete_ruby_version)
-          warn("Using version from :opscomplete_ruby_version setting: #{fetch(:opscomplete_ruby_version)}.")
+          debug("Using version from :opscomplete_ruby_version setting: #{fetch(:opscomplete_ruby_version)}.")
           return fetch(:opscomplete_ruby_version)
-        elsif test("[ -f #{app_ruby_version_file_path} ]")
-          return capture(:cat, app_ruby_version_file_path)
+
+        # 2) Get version from .ruby-version in release dir (after deploy:updating, before deploy:updated)
+        elsif test("[ -f #{release_ruby_version_file_path} ]")
+          debug("Using version from server's release_dir/.ruby-version file: #{capture(:cat, release_ruby_version_file_path)}")
+          return capture(:cat, release_ruby_version_file_path)
+
+        # 3) Get version from local checkout/cwd
+        elsif File.readable?('.ruby-version')
+          debug("Using version from local (cwd) .ruby-version file: #{File.read('.ruby-version').strip}")
+          return File.read('.ruby-version').strip
+
+        # FAIL: We have no idea which version to use
         else
           raise Capistrano::ValidationError, 'Could not find application\'s .ruby-version. Consider setting opscomplete_ruby_version.'
         end

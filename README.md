@@ -69,13 +69,17 @@ Where `<ENVIRONMENT>` could be `production`, `staging`, ...
 More specifically this task will:
   - Check whether you are running a 'managed ruby' (installed with OpsComplete for Ruby) or if you have to install ruby using this gem or rbenv.
   - If you are using 'unmanaged ruby':
-    - Checks if ruby version requested by `.ruby-version` is installed.
-    - If it is not installed, checks if it can be installed using `ruby-build` and installs it.
+    - Check if desired ruby version is installed.
+      - To find the designated ruby version, the following search precedence is being used:
+        1) The value of `:opscomplete_ruby_version` from your capistrano config. Leave this empty unless you want to override the desired version.
+        2) A file in the `release_path` on the server (e.g. `/var/www/staging.myapp.biz/releases/20180523234205/.ruby-version`)
+        3) A file in the current working directory of your local checkout (e.g. `/home/user/code/myapp/.ruby-version`)
+    - If the desired version is not installed, it checks if it can be installed using `ruby-build` and installs it.
     - Check if `rbenv global` version is set according to application's `.ruby-version` file. Change it if required.
     - Install the `bundler` and `geordi` gem if required.
     - Run `rbenv rehash` if required.
 
-*Note:* If, for any reason, no `.ruby-version` file can be found in your release directory, you may set the following option in
+*Note:* If, for any reason, no `.ruby-version` file can be found in your release or current working directory, you may set the following option in
 deploy.rb:
 
 ```ruby
@@ -99,7 +103,7 @@ Note: The current version of this gem only support the passenger app server. The
 There are many hooks in the [default deploy flow](https://capistranorb.com/documentation/getting-started/flow/) to integrate tasks into your own deployment configuration. To ensure a ruby version according to your application is installed during deployment, add the following to your `Capfile`.
 
 ```ruby
-before 'deploy:starting', 'opscomplete:ruby:ensure'
+after 'deploy:updating', 'opscomplete:ruby:ensure'
 after 'deploy:published', 'opscomplete:appserver:restart'
 ```
 
