@@ -11,14 +11,14 @@ namespace :opscomplete do
   namespace :ruby do
     # desc 'Rehash rbenv shims (run this after installing executables).'
     task :rehash do
-      on roles fetch(:rbenv_roles) do
+      on roles fetch(:rbenv_roles, :all) do
         execute(:rbenv, :rehash)
       end
     end
 
     desc 'Check if rbenv global ruby is set according to application\'s .ruby-version.'
     task :check do
-      on roles fetch(:rbenv_roles) do |host|
+      on roles fetch(:rbenv_roles, :all) do |host|
         warn("#{host}: Managed ruby environment! Won't do any changes to ruby version.") if managed_ruby
         unless capture(:rbenv, :global) == app_ruby_version
           raise Capistrano::ValidationError,
@@ -30,7 +30,7 @@ namespace :opscomplete do
 
     # desc 'Install rbenv plugin ruby-build'
     task :install_ruby_build do
-      on roles fetch(:rbenv_roles) do
+      on roles fetch(:rbenv_roles, :all) do
         next if test "[ -d #{rbenv_ruby_build_path} ]"
         execute :git, :clone, ruby_build_repo_url, rbenv_ruby_build_path
       end
@@ -38,7 +38,7 @@ namespace :opscomplete do
 
     # desc 'Update rbenv plugin ruby-build'
     task :update_ruby_build do
-      on roles fetch(:rbenv_roles) do
+      on roles fetch(:rbenv_roles, :all) do
         if test "[ -d #{rbenv_ruby_build_path} ]"
           within rbenv_ruby_build_path do
             execute :git, :pull
@@ -51,7 +51,7 @@ namespace :opscomplete do
 
     # desc 'Install bundler gem'
     task :install_bundler do
-      on roles fetch(:rbenv_roles) do
+      on roles fetch(:rbenv_roles, :all) do
         next if test(:rbenv, :exec, :gem, :query, '--quiet --installed --name-matches ^bundler$')
         execute(:rbenv, :exec, :gem, :install, :bundler, '--quiet --no-rdoc --no-ri')
         set :rbenv_needs_rehash, true
@@ -60,7 +60,7 @@ namespace :opscomplete do
 
     # desc 'Install geordi gem'
     task :install_geordi do
-      on roles fetch(:rbenv_roles) do
+      on roles fetch(:rbenv_roles, :all) do
         next if test(:rbenv, :exec, :gem, :query, '--quiet --installed --name-matches ^geordi$')
         execute(:rbenv, :exec, :gem, :install, :geordi, '--quiet --no-rdoc --no-ri')
         set :rbenv_needs_rehash, true
@@ -69,7 +69,7 @@ namespace :opscomplete do
 
     desc 'Install and configure ruby according to applications .ruby-version.'
     task :ensure do
-      on roles fetch(:rbenv_roles) do |host|
+      on roles fetch(:rbenv_roles, :all) do |host|
         if managed_ruby
           raise Capistrano::ValidationError, "Managed ruby environment! Won't do any changes to ruby version."
         end

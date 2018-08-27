@@ -88,10 +88,12 @@ set :opscomplete_ruby_version, '<VERSION>'
 
 Where `<VERSION>` is the desired ruby version.
 
-Optional: If you want to manage ruby versions for certain roles only, set `rbenv_roles` in your `deploy.rb`:
+**Optional:** By default, the ruby version is checked/installed for all server roles. If you want to limit the rbenv operations to certain roles, set `rbenv_roles` in your `deploy.rb`:
 
 ```ruby
-set :rbenv_roles, :app
+set :rbenv_roles, :web
+# or
+set :rbenv_roles, [:web, :worker]
 ```
 
 ### opscomplete:appserver:restart
