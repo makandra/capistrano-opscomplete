@@ -54,8 +54,13 @@ module Capistrano
       end
 
       def rbenv_installed_rubies
-        rbenv_installed_rubies = capture(:ls, '-1', "#{rbenv_root_path}/versions").split("\n")
-        rbenv_installed_rubies.map!(&:strip)
+        if test("[ -d #{rbenv_root_path}/versions ]")
+          rbenv_installed_rubies = capture(:ls, '-1', "#{rbenv_root_path}/versions").split("\n")
+          return rbenv_installed_rubies.map!(&:strip)
+        else
+          warn("Could not look up installed versions from missing '.rbenv/versions' directory. This is probably the first ruby install for this rbenv.")
+          return []
+        end
       end
     end
   end
