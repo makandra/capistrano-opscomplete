@@ -41,7 +41,7 @@ namespace :opscomplete do
       on roles fetch(:rbenv_roles, :all) do
         if test "[ -d #{rbenv_ruby_build_path} ]"
           within rbenv_ruby_build_path do
-            execute :git, :pull
+            execute :git, :pull, '-q'
           end
         else
           warn('Could not find ruby-build.')
