@@ -22,7 +22,7 @@ namespace :opscomplete do
         warn("#{host}: Managed ruby environment! Won't do any changes to ruby version.") if managed_ruby
         unless capture(:rbenv, :global) == app_ruby_version
           raise Capistrano::ValidationError,
-                "Ruby version is not set according to application's .ruby-version file. Use cap opscomplete:ruby:ensure."
+                "#{host}: Ruby version is not set according to application\'s .ruby-version file. Use cap opscomplete:ruby:ensure."
         end
         info("#{host}: Required ruby version '#{app_ruby_version}' is installed.")
       end
@@ -71,20 +71,19 @@ namespace :opscomplete do
     task :ensure do
       on roles fetch(:rbenv_roles, :all) do |host|
         if managed_ruby
-          raise Capistrano::ValidationError, "Managed ruby environment! Won't do any changes to ruby version."
+          raise Capistrano::ValidationError, "#{host}: Managed ruby environment! Won't do any changes to ruby version."
         end
         if rbenv_installed_rubies.include?(app_ruby_version)
           info("#{host}: Required ruby version '#{app_ruby_version}' is installed.")
         else
           invoke('opscomplete:ruby:update_ruby_build')
           if rbenv_installable_rubies.include?(app_ruby_version)
-            warn('Required ruby version is not installed, but available for installation.')
-            info("Installing ruby #{app_ruby_version}.")
+            info("#{host}: Required ruby version is not installed, but available for installation.")
             execute(:rbenv, :install, app_ruby_version)
             set :rbenv_needs_rehash, true
           else
             raise Capistrano::ValidationError,
-                  'Ruby version required by application is neither installed nor installable using ruby-install.'
+                  "#{host}: Ruby version required by application is neither installed nor installable using ruby-install."
           end
         end
         execute(:rbenv, :global, app_ruby_version) unless capture(:rbenv, :global) == app_ruby_version

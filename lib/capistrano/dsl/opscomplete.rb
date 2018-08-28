@@ -45,7 +45,7 @@ module Capistrano
       def rbenv_installable_rubies
         rbenv_installable_rubies = capture(:rbenv, :install, '--list').split("\n")
         rbenv_installable_rubies.map!(&:strip)
-        rbenv_installable_rubies.delete("Available version:")
+        rbenv_installable_rubies.delete('Available version:')
         rbenv_installable_rubies
       end
 
