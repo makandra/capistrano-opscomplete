@@ -1,4 +1,4 @@
-## [0.3.0] - 2018-11-21
+## [unreleased]
 ### Removed
 - `appserver:restart` which restarts passenger was removed. Please use https://github.com/capistrano/passenger
 
@@ -18,5 +18,5 @@
 ### Added
 - Initial release.
 
-[0.2.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.1.0...v0.2.0
 [0.3.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.1.0...v0.2.0
