@@ -33,8 +33,6 @@ Now, add some [hooks](#using-capistrano-hooks) in your capistrano configuration.
 ```ruby
 # After unpacking your release, before bundling, compiling assets, ...
 after 'deploy:updating', 'opscomplete:ruby:ensure'
-# After your application has been successfully deployed and the current symlink has been set
-after 'deploy:published', 'opscomplete:appserver:restart'
 ```
 
 ## Usage
@@ -96,23 +94,12 @@ set :rbenv_roles, :web
 set :rbenv_roles, [:web, :worker]
 ```
 
-### opscomplete:appserver:restart
-
-To restart your application server execute:
-
-    $ bundle exec cap <ENVIRONMENT> opscomplete:appserver:restart
-
-Where `<ENVIRONMENT>` could be `production`, `staging**, ...
-
-**Note**: The current version of this gem only support the passenger app server. The current version of this gem does not support restarting your application, if multiple instances of passenger are running on the same host. This would be the case if you have Apache _and_ Nginx servers running on the same host.
-
 ### Using capistrano hooks
 
 There are many hooks available in the [default deploy flow](https://capistranorb.com/documentation/getting-started/flow/) to integrate tasks into your own deployment configuration. To ensure a ruby version according to your application is installed during deployment, add the following to your `Capfile`.
 
 ```ruby
 after 'deploy:updating', 'opscomplete:ruby:ensure'
-after 'deploy:published', 'opscomplete:appserver:restart'
 ```
 
 ## Contributing

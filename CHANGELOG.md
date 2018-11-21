@@ -1,3 +1,7 @@
+## [unreleased]
+### Removed
+- `appserver:restart` which restarts passenger was removed. Please use https://github.com/capistrano/passenger
+
 ## [0.2.0] - 2018-08-28
 ### Added
 - Look up .ruby-version from your local branch (cwd) if other options fail
@@ -14,4 +18,5 @@
 ### Added
 - Initial release.
 
+[0.3.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.1.0...v0.2.0
