@@ -53,7 +53,7 @@ namespace :opscomplete do
     task :install_bundler do
       on roles fetch(:rbenv_roles, :all) do
         next if test(:rbenv, :exec, :gem, :query, '--quiet --installed --name-matches ^bundler$')
-        execute(:rbenv, :exec, :gem, :install, :bundler, '--quiet --no-rdoc --no-ri')
+        execute(:rbenv, :exec, :gem, :install, :bundler, '--no-document')
         set :rbenv_needs_rehash, true
       end
     end
@@ -62,13 +62,7 @@ namespace :opscomplete do
     task :install_geordi do
       on roles fetch(:rbenv_roles, :all) do
         next if test(:rbenv, :exec, :gem, :query, '--quiet --installed --name-matches ^geordi$')
-        rubygems_version = capture(:rbenv, :exec, :gem, '--version')
-        no_rdoc_switch = if Gem::Version.new(rubygems_version) >= Gem::Version.new('3.0.0')
-          '--no-document'
-        else
-          '--no-ri --no-rdoc'
-        end
-        execute(:rbenv, :exec, :gem, :install, :geordi, no_rdoc_switch)
+        execute(:rbenv, :exec, :gem, :install, :geordi, '--no-document')
         set :rbenv_needs_rehash, true
       end
     end
