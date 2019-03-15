@@ -52,8 +52,14 @@ namespace :opscomplete do
     # desc 'Install bundler gem'
     task :install_bundler do
       on roles fetch(:rbenv_roles, :all) do
-        next if test(:rbenv, :exec, :gem, :query, '--quiet --installed --name-matches ^bundler$')
-        execute(:rbenv, :exec, :gem, :install, :bundler, '--no-document')
+        if fetch(:bundler_version, false)
+          next if test(:rbenv, :exec, :gem, :query,
+                       "--quiet --installed --version #{fetch(:bundler_version)} --name-matches ^bundler$")
+          execute(:rbenv, :exec, :gem, :install, :bundler, '--no-document', "--version #{fetch(:bundler_version)}")
+        else
+          next if test(:rbenv, :exec, :gem, :query, '--quiet --installed --name-matches ^bundler$')
+          execute(:rbenv, :exec, :gem, :install, :bundler, '--no-document')
+        end
         set :rbenv_needs_rehash, true
       end
     end
