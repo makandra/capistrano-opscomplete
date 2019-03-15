@@ -67,6 +67,20 @@ namespace :opscomplete do
       end
     end
 
+    task :install_rubygems do
+      on roles fetch(:rbenv_roles, :all) do
+        current_rubygems_version = capture(:rbenv, :exec, :gem, '--version').chomp
+        # if no rubygems_version was set, we use and don't check the rubygems version installed by rbenv
+        if fetch(:rubygems_version, false)
+          info("Ensuring requested RubyGems version #{fetch(:rubygems_version)}")
+          next if current_rubygems_version == fetch(:rubygems_version)
+          info("Previously installed RubyGems version is #{current_rubygems_version}")
+          execute(:rbenv, :exec, :gem, :update, '--no-document', '--system', fetch(:rubygems_version))
+          set :rbenv_needs_rehash, true
+        end
+      end
+    end
+
     desc 'Install and configure ruby according to applications .ruby-version.'
     task :ensure do
       on roles fetch(:rbenv_roles, :all) do |host|
@@ -88,6 +102,7 @@ namespace :opscomplete do
         end
         execute(:rbenv, :global, app_ruby_version) unless capture(:rbenv, :global) == app_ruby_version
       end
+      invoke('opscomplete:ruby:install_rubygems')
       invoke('opscomplete:ruby:install_bundler')
       invoke('opscomplete:ruby:install_geordi')
       invoke('opscomplete:ruby:rehash') if fetch(:rbenv_needs_rehash, false)
