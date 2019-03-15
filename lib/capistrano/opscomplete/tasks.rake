@@ -83,6 +83,7 @@ namespace :opscomplete do
 
     desc 'Install and configure ruby according to applications .ruby-version.'
     task :ensure do
+      invoke('opscomplete:ruby:update_ruby_build')
       on roles fetch(:rbenv_roles, :all) do |host|
         if managed_ruby
           raise Capistrano::ValidationError, "#{host}: Managed ruby environment! Won't do any changes to ruby version."
@@ -90,7 +91,6 @@ namespace :opscomplete do
         if rbenv_installed_rubies.include?(app_ruby_version)
           info("#{host}: Required ruby version '#{app_ruby_version}' is installed.")
         else
-          invoke('opscomplete:ruby:update_ruby_build')
           if rbenv_installable_rubies.include?(app_ruby_version)
             info("#{host}: Required ruby version is not installed, but available for installation.")
             execute(:rbenv, :install, app_ruby_version)
