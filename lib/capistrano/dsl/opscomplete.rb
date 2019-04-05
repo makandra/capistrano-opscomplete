@@ -2,7 +2,7 @@ module Capistrano
   module DSL
     # A whole capistrano/rake namespace, for grouping our helpers and tasks
     module Opscomplete
-      def managed_ruby
+      def managed_ruby?
         test("[ -f #{rbenv_root_path}/.ruby_managed_by_makandra ]")
       end
 
@@ -61,6 +61,30 @@ module Capistrano
           warn("Could not look up installed versions from missing '.rbenv/versions' directory. This is probably the first ruby install for this rbenv.")
           []
         end
+      end
+
+      def rbenv_exec(*args)
+        execute(:rbenv, :exec, *args)
+      end
+
+      def gem_installed?(name, version = nil)
+        if version
+          test(:rbenv, :exec, "gem query --quiet --installed --version #{version} --name-matches ^#{name}$")
+        else
+          test(:rbenv, :exec, :gem, :query, "--quiet --installed --name-matches ^#{name}$")
+        end
+      end
+
+      def gem_install(name, version = nil)
+        if version
+          rbenv_exec('gem install', name, '--no-document', '--version', version)
+        else
+          rbenv_exec('gem install', name, '--no-document')
+        end
+      end
+
+      def rubygems_install(version)
+        rbenv_exec('gem update --no-document --system', version)
       end
     end
   end
