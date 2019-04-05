@@ -78,13 +78,11 @@ More specifically this task will:
     - Install the `bundler` and `geordi` gem if required.
     - Run `rbenv rehash` if required.
 
-**Note:** If, for any reason, no `.ruby-version` file can be found in your release or current working directory, you may set the following option in deploy.rb:
+**Note:** If, for any reason, no `.ruby-version` file can be found in your release or current working directory, you may set the following option in `deploy.rb`:
 
 ```ruby
 set :opscomplete_ruby_version, '<VERSION>'
 ```
-
-Where `<VERSION>` is the desired ruby version.
 
 **Optional:** By default, the ruby version is checked/installed for all server roles. If you want to limit the rbenv operations to certain roles, set `rbenv_roles` in your `deploy.rb`:
 
@@ -92,6 +90,18 @@ Where `<VERSION>` is the desired ruby version.
 set :rbenv_roles, :web
 # or
 set :rbenv_roles, [:web, :worker]
+```
+
+**Optional:** By default, the most recent version of bundler will be installed. If you want a specific bundler version available for your release, set it in your `deploy.rb`:
+
+```ruby
+set :bundler_version, '<VERSION>'
+```
+
+**Optional:** By default, the rubygems version defined by the ruby-build manifest will be installed. If you want a specific rubygems version available for your release, set it in your `deploy.rb`:
+
+```ruby
+set :rubygems_version, '<VERSION>'
 ```
 
 ### Using capistrano hooks
