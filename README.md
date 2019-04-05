@@ -33,8 +33,6 @@ Now, add some [hooks](#using-capistrano-hooks) in your capistrano configuration.
 ```ruby
 # After unpacking your release, before bundling, compiling assets, ...
 after 'deploy:updating', 'opscomplete:ruby:ensure'
-# After your application has been successfully deployed and the current symlink has been set
-after 'deploy:published', 'opscomplete:appserver:restart'
 ```
 
 ## Usage
@@ -80,13 +78,11 @@ More specifically this task will:
     - Install the `bundler` and `geordi` gem if required.
     - Run `rbenv rehash` if required.
 
-**Note:** If, for any reason, no `.ruby-version` file can be found in your release or current working directory, you may set the following option in deploy.rb:
+**Note:** If, for any reason, no `.ruby-version` file can be found in your release or current working directory, you may set the following option in `deploy.rb`:
 
 ```ruby
 set :opscomplete_ruby_version, '<VERSION>'
 ```
-
-Where `<VERSION>` is the desired ruby version.
 
 **Optional:** By default, the ruby version is checked/installed for all server roles. If you want to limit the rbenv operations to certain roles, set `rbenv_roles` in your `deploy.rb`:
 
@@ -96,15 +92,17 @@ set :rbenv_roles, :web
 set :rbenv_roles, [:web, :worker]
 ```
 
-### opscomplete:appserver:restart
+**Optional:** By default, the most recent version of bundler will be installed. If you want a specific bundler version available for your release, set it in your `deploy.rb`:
 
-To restart your application server execute:
+```ruby
+set :bundler_version, '<VERSION>'
+```
 
-    $ bundle exec cap <ENVIRONMENT> opscomplete:appserver:restart
+**Optional:** By default, the rubygems version defined by the ruby-build manifest will be installed. If you want a specific rubygems version available for your release, set it in your `deploy.rb`:
 
-Where `<ENVIRONMENT>` could be `production`, `staging**, ...
-
-**Note**: The current version of this gem only support the passenger app server. The current version of this gem does not support restarting your application, if multiple instances of passenger are running on the same host. This would be the case if you have Apache _and_ Nginx servers running on the same host.
+```ruby
+set :rubygems_version, '<VERSION>'
+```
 
 ### Using capistrano hooks
 
@@ -112,7 +110,6 @@ There are many hooks available in the [default deploy flow](https://capistranorb
 
 ```ruby
 after 'deploy:updating', 'opscomplete:ruby:ensure'
-after 'deploy:published', 'opscomplete:appserver:restart'
 ```
 
 ## Contributing
