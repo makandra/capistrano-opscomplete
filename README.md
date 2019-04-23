@@ -28,11 +28,20 @@ Verify the gem was installed and tasks are available:
 
     $ bundle exec cap -T opscomplete
 
-Now, add some [hooks](#using-capistrano-hooks) in your capistrano configuration. An example configuration could look like this:
+Now, add some [hooks](#using-capistrano-hooks) in your capistrano configuration (e.g. `deploy.rb`).
+An example configuration could look like this:
 
 ```ruby
 # After unpacking your release, before bundling, compiling assets, ...
 after 'deploy:updating', 'opscomplete:ruby:ensure'
+```
+
+and in case you enabled [`Procfile support`](https://makandracards.com/opscomplete/67829-procfile-support) this can be enabled:
+
+```ruby
+# Update and Restart supervisor config
+after 'deploy:updating', 'opscomplete:supervisor:gen_config'
+after 'deploy:published', 'opscomplete:supervisor:restart_procs'
 ```
 
 ## Usage
