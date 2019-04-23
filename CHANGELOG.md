@@ -1,3 +1,9 @@
+## master (unreleased)
+
+### Added
+
+- Support for Procfiles. See [this makandra card](https://makandracards.com/opscomplete/67829-procfile-support) for more information.
+
 ## [0.3.0] - 2019-04-05
 ### Added
 - You can now specify the rubygems and bundler version to be installed. (#4)
