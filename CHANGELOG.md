@@ -1,4 +1,7 @@
 ## Unreleased
+### Added
+
+- Support for Procfiles. See [this makandra card](https://makandracards.com/opscomplete/67829-procfile-support) for more information.
 
 ## [0.5.0] - 2019-12-09
 ### Changed
@@ -12,7 +15,6 @@
 ### Changed
 - Allow using --force when installing a gem e.g. overwrite binaries
 - Quote some shell arguments
-
 
 ## [0.3.0] - 2019-04-05
 ### Added
