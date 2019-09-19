@@ -94,7 +94,9 @@ namespace :opscomplete do
           info("#{host}: Required ruby version '#{app_ruby_version}' is installed.")
         elsif rbenv_installable_rubies.include?(app_ruby_version)
           info("#{host}: Required ruby version is not installed, but available for installation.")
-          execute(:rbenv, :install, app_ruby_version)
+          with tmpdir: fetch(:tmp_dir) do
+            execute(:rbenv, :install, app_ruby_version)
+          end
           set :rbenv_needs_rehash, true
         else
           raise Capistrano::ValidationError,
