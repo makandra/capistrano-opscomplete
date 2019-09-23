@@ -75,9 +75,9 @@ module Capistrano
         end
       end
 
-      def gem_install(name, version = nil)
+      def gem_install(name, version = nil, force = false)
         if version
-          rbenv_exec('gem install', name, '--no-document', '--version', "'#{version}'")
+          rbenv_exec('gem install', name, '--no-document', '--version', "'#{version}'", force ? '--force' : '')
         else
           rbenv_exec('gem install', name, '--no-document')
         end
