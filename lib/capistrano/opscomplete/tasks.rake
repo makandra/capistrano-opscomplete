@@ -77,7 +77,7 @@ namespace :opscomplete do
           info("Ensuring requested RubyGems version #{fetch(:rubygems_version)}")
           next if current_rubygems_version == fetch(:rubygems_version)
           info("Previously installed RubyGems version was #{current_rubygems_version}")
-          rbenv_exec(:gem, :update, '--no-document', '--system', fetch(:rubygems_version))
+          rbenv_exec(:gem, :update, '--no-document', '--system', "'#{fetch(:rubygems_version)}'")
           set :rbenv_needs_rehash, true
         end
       end
@@ -95,14 +95,14 @@ namespace :opscomplete do
         elsif rbenv_installable_rubies.include?(app_ruby_version)
           info("#{host}: Required ruby version is not installed, but available for installation.")
           with tmpdir: fetch(:tmp_dir) do
-            execute(:rbenv, :install, app_ruby_version)
+            execute(:rbenv, :install, "'#{app_ruby_version}'")
           end
           set :rbenv_needs_rehash, true
         else
           raise Capistrano::ValidationError,
                 "#{host}: Ruby version required by application is neither installed nor installable using ruby-install."
         end
-        execute(:rbenv, :global, app_ruby_version) unless capture(:rbenv, :global) == app_ruby_version
+        execute(:rbenv, :global, "'#{app_ruby_version}'") unless capture(:rbenv, :global) == app_ruby_version
       end
       invoke('opscomplete:ruby:install_rubygems')
       invoke('opscomplete:ruby:install_bundler')

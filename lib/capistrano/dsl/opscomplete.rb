@@ -69,7 +69,7 @@ module Capistrano
 
       def gem_installed?(name, version = nil)
         if version
-          test(:rbenv, :exec, "gem query --quiet --installed --version #{version} --name-matches ^#{name}$")
+          test(:rbenv, :exec, "gem query --quiet --installed --version '#{version}' --name-matches '^#{name}$'")
         else
           test(:rbenv, :exec, :gem, :query, "--quiet --installed --name-matches ^#{name}$")
         end
@@ -77,14 +77,14 @@ module Capistrano
 
       def gem_install(name, version = nil)
         if version
-          rbenv_exec('gem install', name, '--no-document', '--version', version)
+          rbenv_exec('gem install', name, '--no-document', '--version', "'#{version}'")
         else
           rbenv_exec('gem install', name, '--no-document')
         end
       end
 
       def rubygems_install(version)
-        rbenv_exec('gem update --no-document --system', version)
+        rbenv_exec("gem update --no-document --system '#{version}'")
       end
     end
   end
