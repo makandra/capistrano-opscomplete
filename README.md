@@ -92,7 +92,7 @@ set :rbenv_roles, :web
 set :rbenv_roles, [:web, :worker]
 ```
 
-**Optional:** By default, the most recent version of bundler will be installed. If you want a specific bundler version available for your release, set it in your `deploy.rb`:
+**Optional:** If you want a specific bundler version available for your release, set it in your `deploy.rb`, e.g '~>2' if you need bundler version 2.x:
 
 ```ruby
 set :bundler_version, '<VERSION>'
