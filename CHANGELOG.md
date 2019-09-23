@@ -1,3 +1,12 @@
+## [0.4.0] - 2019-09-23
+### Added
+- ruby-build now honors the :tmp_dir setting
+
+### Changed
+- Allow using --force when installing a gem e.g. overwrite binaries
+- Quote some shell arguments
+
+
 ## [0.3.0] - 2019-04-05
 ### Added
 - You can now specify the rubygems and bundler version to be installed. (#4)
@@ -26,5 +35,6 @@
 ### Added
 - Initial release.
 
+[0.4.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.1.0...v0.2.0
