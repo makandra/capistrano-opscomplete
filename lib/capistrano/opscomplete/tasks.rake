@@ -16,15 +16,15 @@ namespace :opscomplete do
       end
     end
 
-    desc 'Check if rbenv global ruby is set according to application\'s .ruby-version.'
+    desc 'Check if rbenv global Ruby version is set according to application\'s .ruby-version.'
     task :check do
       on roles fetch(:rbenv_roles, :all) do |host|
-        warn("#{host}: Managed ruby environment! Won't do any changes to ruby version.") if managed_ruby?
+        warn("#{host}: Managed Ruby environment! Won't do any changes to ruby version.") if managed_ruby?
         unless capture(:rbenv, :global) == app_ruby_version
           raise Capistrano::ValidationError,
                 "#{host}: Ruby version is not set according to application\'s .ruby-version file. Use cap opscomplete:ruby:ensure."
         end
-        info("#{host}: Required ruby version '#{app_ruby_version}' is installed.")
+        info("#{host}: Ruby #{app_ruby_version} is installed.")
       end
     end
 
@@ -89,19 +89,19 @@ namespace :opscomplete do
       invoke('opscomplete:ruby:update_ruby_build')
       on roles fetch(:rbenv_roles, :all) do |host|
         if managed_ruby?
-          raise Capistrano::ValidationError, "#{host}: Managed ruby environment! Won't do any changes to ruby version."
+          raise Capistrano::ValidationError, "#{host}: Managed Ruby environment! Won't do any changes to Ruby version."
         end
         if rbenv_installed_rubies.include?(app_ruby_version)
-          info("#{host}: Required ruby version '#{app_ruby_version}' is installed.")
+          info("#{host}: Ruby #{app_ruby_version} is installed.")
         elsif rbenv_installable_rubies.include?(app_ruby_version)
-          info("#{host}: Required ruby version is not installed, but available for installation.")
+          info("#{host}: Configured Ruby version is not installed, but available for installation.")
           with tmpdir: fetch(:tmp_dir) do
             execute(:rbenv, :install, "'#{app_ruby_version}'")
           end
           set :rbenv_needs_rehash, true
         else
           raise Capistrano::ValidationError,
-                "#{host}: Ruby version required by application is neither installed nor installable using ruby-install."
+                "#{host}: Configured Ruby version is neither installed nor installable using ruby-install."
         end
         execute(:rbenv, :global, "'#{app_ruby_version}'") unless capture(:rbenv, :global) == app_ruby_version
       end
