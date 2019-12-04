@@ -75,7 +75,8 @@ More specifically this task will:
       3) A file in the current working directory of your local checkout (e.g. `/home/user/code/myapp/.ruby-version`)
     - If the desired version is not installed, it checks if it can be installed using `ruby-build` and installs it.
     - Check if `rbenv global` version is set according to application's `.ruby-version` file. Change it if required.
-    - Install the `bundler` and `geordi` gem if required.
+    - Install `bundler`. It is tried to determine the version that was used to create the `Gemfile.lock` (`BUNDLED WITH`) if it is present.
+    - Install `geordi` gem if required.
     - Run `rbenv rehash` if required.
 
 **Note:** If, for any reason, no `.ruby-version` file can be found in your release or current working directory, you may set the following option in `deploy.rb`:
@@ -92,10 +93,16 @@ set :rbenv_roles, :web
 set :rbenv_roles, [:web, :worker]
 ```
 
-**Optional:** If you want a specific bundler version available for your release, set it in your `deploy.rb`, e.g '~>2' if you need bundler version 2.x:
+**Optional:** If you want a specific bundler version other than the one that is set in `Gemfile.lock` available for your release, set it in your `deploy.rb`:
 
 ```ruby
 set :bundler_version, '<VERSION>'
+```
+
+e.g. if you need bundler version 2.x:
+
+```ruby
+set :bundler_version, '~>2'
 ```
 
 **Optional:** By default, the rubygems version defined by the ruby-build manifest will be installed. If you want a specific rubygems version available for your release, set it in your `deploy.rb`:

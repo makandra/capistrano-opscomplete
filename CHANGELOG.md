@@ -1,3 +1,7 @@
+## Unreleased
+### Changed
+- Install the bundler version that was used to create the `Gemfile.lock` (`BUNDLED WITH`) if it is present.
+
 ## [0.4.0] - 2019-09-23
 ### Added
 - ruby-build now honors the :tmp_dir setting
