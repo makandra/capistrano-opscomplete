@@ -52,9 +52,12 @@ namespace :opscomplete do
     # desc 'Install bundler gem'
     task :install_bundler do
       on roles fetch(:rbenv_roles, :all) do
-        if fetch(:bundler_version, false)
+        # manually specified version will take precedence
+        specific_bundler_version = fetch(:bundler_version, app_gemfile_bundled_with_version)
+
+        if specific_bundler_version
           # We have to set force = true to overwrite the binary
-          gem_install('bundler', fetch(:bundler_version), true) unless gem_installed?('bundler', fetch(:bundler_version))
+          gem_install('bundler', specific_bundler_version, true) unless gem_installed?('bundler', specific_bundler_version)
         else
           gem_install('bundler') unless gem_installed?('bundler')
         end

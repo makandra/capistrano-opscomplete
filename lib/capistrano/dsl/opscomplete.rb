@@ -42,6 +42,28 @@ module Capistrano
         end
       end
 
+      def app_gemfile_bundled_with_version
+        release_gemfile_lock_file_path = release_path.join('Gemfile.lock').to_s
+
+        if test("[ -f #{release_gemfile_lock_file_path} ]")
+          debug('found release_dir/Gemfile.lock')
+
+          grep_command = [:grep, '-A', '1', '"BUNDLED WITH"', release_gemfile_lock_file_path]
+
+          if test(*grep_command)
+            bundled_with_lines = capture(*grep_command)
+            version = bundled_with_lines.split.last
+            debug("Using version #{version.inspect} from server's release_dir/Gemfile.lock file.")
+            version
+          else
+            # old bundler versions did not write "BUNDLED WITH"
+            debug('Gemfile.lock was found but did not contain "BUNDLED WITH"-section')
+          end
+        else
+          debug('There was no Gemfile.lock to parse the bundler version')
+        end
+      end
+
       def rbenv_installable_rubies
         rbenv_installable_rubies = capture(:rbenv, :install, '--list').split("\n")
         rbenv_installable_rubies.map!(&:strip)
