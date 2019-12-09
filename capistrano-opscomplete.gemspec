@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors  = ['Makandra Operations']
   spec.email    = ['ops@makandra.de']
 
-  spec.summary  = %q(Capistrano tasks for easy deployment to a makandra opscomplete environment.)
+  spec.summary  = 'Capistrano tasks for easy deployment to a makandra opscomplete environment.'
   spec.homepage = 'https://opscomplete.com/ruby'
 
   spec.license  = 'MIT'
@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
 
   spec.required_rubygems_version = '>=2.0.1'
 
-  spec.add_development_dependency 'makandra-rubocop', '~> 0'
+  spec.add_development_dependency 'makandra-rubocop', '~> 4'
   spec.add_development_dependency 'bundler', '~> 1.16'
   spec.add_development_dependency 'rake', '~> 10.0'
 
