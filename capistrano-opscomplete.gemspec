@@ -14,7 +14,12 @@ Gem::Specification.new do |spec|
   spec.license  = 'MIT'
 
   if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = 'https://rubygems.org'
+    spec.metadata = {
+      'allowed_push_host' => 'https://rubygems.org',
+      'bug_tracker_uri' => 'https://github.com/makandra/capistrano-opscomplete/issues',
+      'changelog_uri' => 'https://github.com/makandra/capistrano-opscomplete/blob/master/CHANGELOG.md',
+      'source_code_uri' => 'https://github.com/makandra/capistrano-opscomplete',
+    }
   else
     raise 'RubyGems 2.0 or newer is required to protect against ' \
       'public gem pushes.'
