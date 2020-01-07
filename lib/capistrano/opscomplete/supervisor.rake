@@ -3,16 +3,16 @@ namespace :opscomplete do
   namespace :supervisor do
     desc '(Re-)Generate the supervisor configuration (e.g. for supervisord).'
     task :gen_config do
-      on roles :web do
+      on roles fetch(:procfile_role, :app) do |host|
         within release_path do
-          execute :supervisor_gen_config
+          execute :supervisor_gen_config, host.properties.procfile
         end
       end
     end
 
     desc 'Reread the supervisor configuration and (re)start all Procfile processes'
     task :restart_procs do
-      on roles :web do
+      on roles fetch(:procfile_role, :app) do
         within release_path do
           execute :supervisor_restart_procs
         end
@@ -21,7 +21,7 @@ namespace :opscomplete do
 
     desc 'Stop all Procfile processes in case you want to them to be stopped while your deployment runs'
     task :stop_procs do
-      on roles :web do
+      on roles fetch(:procfile_role, :app) do
         within release_path do
           execute :supervisor_stop_procs
         end
@@ -45,7 +45,7 @@ namespace :opscomplete do
       signal = args.fetch(:signal)
       program_name = args.fetch(:program_name, nil)
 
-      on roles :web do
+      on roles fetch(:procfile_role, :app) do
         within release_path do
           if program_name
             execute :supervisor_signal_procs, signal, program_name
