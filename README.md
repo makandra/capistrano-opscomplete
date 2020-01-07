@@ -36,12 +36,35 @@ An example configuration could look like this:
 after 'deploy:updating', 'opscomplete:ruby:ensure'
 ```
 
-and in case you enabled [`Procfile support`](https://makandracards.com/opscomplete/67829-procfile-support) this can be enabled:
+and in case you enabled [`Procfile support`](https://makandracards.com/opscomplete/67829-procfile-support) you can use the following tasks:
+
+    opscomplete:supervisor:gen_config
+    opscomplete:supervisor:restart_procs
+    opscomplete:supervisor:stop_procs
+    opscomplete:supervisor:signal_procs
+
+e.g. like this:
 
 ```ruby
 # Update and Restart supervisor config
 after 'deploy:updating', 'opscomplete:supervisor:gen_config'
 after 'deploy:published', 'opscomplete:supervisor:restart_procs'
+```
+
+Using the default configuration, these tasks will run on all Servers where role is `:app` using the Procfile called `Procfile`.
+To change the role where these tasks will get executed, set `:procfile_role` in e.g. your `config/deploy.rb` like:
+
+```ruby
+# Use supervisor tasks only for sidekiq role
+set :procfile_role, :sidekiq
+```
+
+If you want to run different Procfiles on differen servers, you can set the `:procfile` property in your `config/deploy/${env}.rb`:
+
+```
+# In this example, `Procfile` will get used for supervisor on srv2.example.com and `Procfile.sidekiq` for supervisor on srv1.example.com.
+server "srv1.example.com", user: "deploy-example_s", roles: %w{app web}, procfile: "Procfile.sidekiq"
+server "srv2.example.com", user: "deploy-example_s", roles: %w{app web}
 ```
 
 ## Usage
