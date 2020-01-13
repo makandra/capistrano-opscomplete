@@ -1,7 +1,9 @@
 ## Unreleased
+
+## [0.6.0] - 2020-01-13
 ### Added
 
-- Support for Procfiles. See [this makandra card](https://makandracards.com/opscomplete/67829-procfile-support) for more information.
+- Support for Procfiles/supervisord. See [this makandra card](https://makandracards.com/opscomplete/67829-procfile-support) for more information.
 
 ## [0.5.0] - 2019-12-09
 ### Changed
@@ -44,6 +46,7 @@
 ### Added
 - Initial release.
 
+[0.6.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/makandra/capistrano-opscomplete/compare/v0.2.0...v0.3.0
