@@ -30,7 +30,7 @@ GEM
       ast (~> 2.4.0)
     rack (2.1.1)
     rainbow (3.0.0)
-    rake (10.5.0)
+    rake (13.0.1)
     rubocop (0.76.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
@@ -54,7 +54,7 @@ DEPENDENCIES
   bundler (~> 2)
   capistrano-opscomplete!
   makandra-rubocop (~> 4)
-  rake (~> 10.0)
+  rake (~> 13.0)
 
 BUNDLED WITH
    2.1.4
