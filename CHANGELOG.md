@@ -1,5 +1,8 @@
 ## Unreleased
 
+### Changed
+- Upgrade rake dependency to ~>13.0
+
 ## [0.6.0] - 2020-01-13
 ### Added
 
