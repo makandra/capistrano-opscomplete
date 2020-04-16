@@ -59,7 +59,7 @@ To change the role where these tasks will get executed, set `:procfile_role` in 
 set :procfile_role, :sidekiq
 ```
 
-If you want to run different Procfiles on differen servers, you can set the `:procfile` property in your `config/deploy/${env}.rb`:
+If you want to run different Procfiles on different servers, you can set the `:procfile` property in your `config/deploy/${env}.rb`:
 
 ```
 # In this example, `Procfile` will get used for supervisor on srv2.example.com and `Procfile.sidekiq` for supervisor on srv1.example.com.
