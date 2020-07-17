@@ -27,7 +27,7 @@ namespace :opscomplete do
         end
       end
     end
-    
+
     # Can be used for example to quiet sidekiq with a task like this:
     #
     #     namespace :sidekiq do
@@ -41,7 +41,7 @@ namespace :opscomplete do
     #       end
     #     end
     desc 'Sends the signal (e.g. USR1 or TSTP) to all programs or if specified to program_name.'
-    task :signal_procs, :signal, :program_name do |task_name, args|
+    task :signal_procs, :signal, :program_name do |_task_name, args|
       signal = args.fetch(:signal)
       program_name = args.fetch(:program_name, nil)
 
