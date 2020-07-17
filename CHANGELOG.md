@@ -3,6 +3,13 @@
 ### Changed
 - Upgrade rake dependency to ~>13.0
 
+## [0.6.1] - 2020-04-16
+### Added
+- Use Ruby 2.6 for development
+
+### Changed
+- Add rake as a runtime dependency
+
 ## [0.6.0] - 2020-01-13
 ### Added
 
