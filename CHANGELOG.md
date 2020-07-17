@@ -1,7 +1,7 @@
 ## Unreleased
 
 ### Changed
-- Upgrade rake dependency to ~>13.0
+- Bumped rack dependency from 2.1.1 to 2.2.3 
 
 ## [0.6.1] - 2020-04-16
 ### Added
