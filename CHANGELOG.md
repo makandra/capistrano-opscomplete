@@ -1,3 +1,8 @@
+## [0.6.3] - 2020-07-23
+
+### Fixed
+- regression after ([#18](https://github.com/makandra/capistrano-opscomplete/issues/18)) was merged
+
 ## [0.6.2] - 2020-07-23
 
 ### Fixed
