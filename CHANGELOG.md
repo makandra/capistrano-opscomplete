@@ -1,7 +1,10 @@
-## Unreleased
+## [0.6.2] - 2020-07-23
+
+### Fixed
+- rbenv-build changed behaviour of `--list` ([#20](https://github.com/makandra/capistrano-opscomplete/issues/20))
 
 ### Changed
-- Bumped rack dependency from 2.1.1 to 2.2.3 
+- Bumped rack dependency from 2.1.1 to 2.2.3
 
 ## [0.6.1] - 2020-04-16
 ### Added
