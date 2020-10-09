@@ -36,7 +36,7 @@ namespace :opscomplete do
     #         on roles :cron do
     #           # The TSTP signal tells sidekiq to quiet all workers.
     #           # see: https://github.com/mperham/sidekiq/wiki/Signals#tstp
-    #           invoke('supervisor:signal_procs', 'TSTP', 'sidekiq')
+    #           invoke('opscomplete:supervisor:signal_procs', 'TSTP', 'sidekiq')
     #         end
     #       end
     #     end
