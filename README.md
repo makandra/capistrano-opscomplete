@@ -151,6 +151,24 @@ There are many hooks available in the [default deploy flow](https://capistranorb
 after 'deploy:updating', 'opscomplete:ruby:ensure'
 ```
 
+## Managing your nodejs version with `capistrano-opscomplete`
+
+You can manage NodeJS also with `capistrano-opscomplete`. It will check the `.nvmrc`, `.node-version` and `.tool-versions` in the release direcotry (in this order) or you can configure it with `:opscomplete_nodejs_version` in your capistrano configuration.
+
+Include the gem in your applications Gemfile:
+
+```ruby
+gem 'capistrano-opscomplete'
+```
+
+Now, add some [hooks](#using-capistrano-hooks) in your capistrano configuration (e.g. `deploy.rb`).
+An example configuration could look like this:
+
+```ruby
+# After unpacking your release, before bundling, compiling assets, ...
+after 'deploy:updating', 'opscomplete:nodejs:ensure'
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome. Don't hesitate to [open a new issue](https://github.com/makandra/capistrano-opscomplete/issues/new).

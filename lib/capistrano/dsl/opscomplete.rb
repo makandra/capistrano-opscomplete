@@ -108,6 +108,38 @@ module Capistrano
       def rubygems_install(version)
         rbenv_exec("gem update --no-document --system '#{version}'")
       end
+
+      def managed_nodejs?
+        test("[ -f ${HOME}/.nodejs_managed_by_makandra ]")
+      end
+
+      def app_nodejs_version
+
+        # 1) Get version from capistrano configuration (highest precedence, 'override')
+        if fetch(:opscomplete_nodejs_version)
+          debug("Using version from :opscomplete_nodejs_version setting: #{fetch(:opscomplete_nodejs_version)}.")
+          fetch(:opscomplete_nodejs_version)
+
+        # 2) Get version from version file in release dir (after deploy:updating, before deploy:updated)
+        elsif capture(:nodejs_get_version, release_path)
+          debug("Using version from server's release_dir/.nvmrc, .node-version or .tool-versions file: #{capture(:nodejs_get_version, release_path)}")
+          capture(:nodejs_get_version, release_path)
+
+        else
+          raise Capistrano::ValidationError, 'Could not find application\'s Node.js version. Consider setting opscomplete_ruby_version.'
+        end
+      end
+
+      def nodejs_installable_versions
+        nodejs_installable_versions = capture(:nodejs_installable_versions).split("\n")
+        nodejs_installable_versions.map!(&:strip)
+        nodejs_installable_versions
+      end
+
+      def nodejs_installed_versions
+        nodejs_installed_versions = capture(:nodejs_installed_versions).split("\n")
+        nodejs_installed_versions.map!(&:strip)
+      end
     end
   end
 end
