@@ -106,7 +106,10 @@ namespace :opscomplete do
           raise Capistrano::ValidationError,
                 "#{host}: Configured Ruby version is neither installed nor installable using ruby-install."
         end
-        execute(:rbenv, :global, "'#{app_ruby_version}'") unless capture(:rbenv, :global) == app_ruby_version
+        unless capture(:rbenv, :global) == app_ruby_version
+          set :ruby_modified, true
+          execute(:rbenv, :global, "'#{app_ruby_version}'")
+        end
       end
       invoke('opscomplete:ruby:install_rubygems')
       invoke('opscomplete:ruby:install_bundler')
@@ -133,6 +136,20 @@ namespace :opscomplete do
             raise Capistrano::ValidationError,
               "Unable to find #{current_path}/.bundle/config, won't run bundle pristine."
           end
+        end
+      end
+    end
+
+    desc 'Set the old ruby version before the change and invoke bundle pristine.'
+    task :broken_gems_warning do
+      on roles fetch(:rbenv_roles, :all) do |host|
+        if fetch(:ruby_modified, false)
+          warn("Deploy failed and the ruby version has been modified in this deploy.")
+          warn("If this was a minor ruby version upgrade your running application may run into issues with native gem extensions.")
+          warn("If your deploy failed deploy:symlink:release you may run bundle exec `cap #{fetch(:stage)} opscomplete:ruby:reset`.")
+          warn("Please refer https://makandracards.com/makandra/477884-bundler-in-deploy-mode-shares-gems-between-patch-level-ruby-versions")
+        else
+          debug("#{host}: Ruby not modified in current deploy.")
         end
       end
     end
