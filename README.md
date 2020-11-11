@@ -36,7 +36,13 @@ An example configuration could look like this:
 after 'deploy:updating', 'opscomplete:ruby:ensure'
 ```
 
-and in case you enabled [`Procfile support`](https://makandracards.com/opscomplete/67829-procfile-support) you can use the following tasks:
+If you want to handle the ruby version for rollbacks too, you should add:
+
+```ruby
+after 'deploy:reverting', 'opscomplete:ruby:ensure'
+```
+
+And in case you enabled [`Procfile support`](https://makandracards.com/opscomplete/67829-procfile-support) you can use the following tasks:
 
     opscomplete:supervisor:gen_config
     opscomplete:supervisor:restart_procs
