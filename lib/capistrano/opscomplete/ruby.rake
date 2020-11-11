@@ -113,5 +113,28 @@ namespace :opscomplete do
       invoke('opscomplete:ruby:install_geordi')
       invoke('opscomplete:ruby:rehash') if fetch(:rbenv_needs_rehash, false)
     end
+
+    desc 'resets the global ruby version and gems to Gemfile and .ruby-version in current_path.'
+    task :reset do
+      on roles fetch(:rbenv_roles, :all) do |host|
+        within current_path do
+          current_ruby_version_file_path = current_path.join('.ruby-version').to_s
+          if test("[ -f #{current_ruby_version_file_path} ]")
+            execute(:rbenv, :global, capture(:cat, current_ruby_version_file_path))
+          else
+            raise Capistrano::ValidationError,
+                  "#{host}: Missing .ruby-version in #{current_path}. Won't set a new global version."
+          end
+          if test("[ -f '#{current_path}/.bundle/config' ]")
+            debug("#{host}: Found #{current_path}/.bundle/config, running bundle pristine.")
+            set :bundle_gemfile, -> { current_path.join('Gemfile') }
+            execute(:bundle, :pristine)
+          else
+            raise Capistrano::ValidationError,
+              "Unable to find #{current_path}/.bundle/config, won't run bundle pristine."
+          end
+        end
+      end
+    end
   end
 end
