@@ -1,3 +1,12 @@
+## [0.6.4] - 2020-11-19
+
+### Added
+- You can now manage the Node.js version which needs to be installed
+- Add two new capistrano tasks (`opscomplete:ruby:broken_gems_warning`, `opscomplete:ruby:reset`) which help to mitigate problems when a deployment fails (described in: [#19](https://github.com/makandra/capistrano-opscomplete/issues/19))
+
+### Fixed
+- Added missing namespace for code example
+
 ## [0.6.3] - 2020-07-23
 
 ### Fixed
