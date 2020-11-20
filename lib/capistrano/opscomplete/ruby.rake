@@ -146,7 +146,7 @@ namespace :opscomplete do
         if fetch(:ruby_modified, false)
           warn("Deploy failed and the ruby version has been modified in this deploy.")
           warn("If this was a minor ruby version upgrade your running application may run into issues with native gem extensions.")
-          warn("If your deploy failed deploy:symlink:release you may run bundle exec `cap #{fetch(:stage)} opscomplete:ruby:reset`.")
+          warn("If your deploy failed before deploy:symlink:release you may run bundle exec `cap #{fetch(:stage)} opscomplete:ruby:reset`.")
           warn("Please refer https://makandracards.com/makandra/477884-bundler-in-deploy-mode-shares-gems-between-patch-level-ruby-versions")
         else
           debug("#{host}: Ruby not modified in current deploy.")
