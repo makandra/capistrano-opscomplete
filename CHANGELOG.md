@@ -1,3 +1,8 @@
+## [0.6.5] - 2020-11-20
+
+### Fixed
+- Correct warning message for `opscomplete:ruby:broken_gems_warning`
+
 ## [0.6.4] - 2020-11-19
 
 ### Added
