@@ -1,3 +1,8 @@
+## [0.6.6] - 2020-12-08
+
+### Fixed
+- Fix the error `undefined method 'after' for main:Object (NoMethodError)` when starting the rails application with capistrano-opscomplete required
+
 ## [0.6.5] - 2020-11-20
 
 ### Fixed
