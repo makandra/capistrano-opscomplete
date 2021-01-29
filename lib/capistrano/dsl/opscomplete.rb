@@ -3,19 +3,7 @@ module Capistrano
     # A whole capistrano/rake namespace, for grouping our helpers and tasks
     module Opscomplete
       def managed_ruby?
-        test("[ -f #{rbenv_root_path}/.ruby_managed_by_makandra ]")
-      end
-
-      def rbenv_ruby_build_path
-        "#{rbenv_root_path}/plugins/ruby-build"
-      end
-
-      def rbenv_repo_url
-        'https://github.com/rbenv/rbenv.git'
-      end
-
-      def ruby_build_repo_url
-        'https://github.com/rbenv/ruby-build.git'
+        test(:ruby_update_management_tool, 'managed')
       end
 
       def app_ruby_version
@@ -64,49 +52,33 @@ module Capistrano
         end
       end
 
-      def rbenv_installable_rubies
-        rbenv_installable_rubies = capture(:rbenv, :install, '--list-all').split("\n")
-        rbenv_installable_rubies.map!(&:strip)
-        rbenv_installable_rubies.delete('Available version:')
-        rbenv_installable_rubies
+      def ruby_installable_versions
+        ruby_installable_versions = capture(:ruby_installable_versions).split("\n")
+        ruby_installable_versions.map!(&:strip)
+        ruby_installable_versions
       end
 
-      def rbenv_root_path
-        capture(:rbenv, :root)
-      end
-
-      def rbenv_installed_rubies
-        if test("[ -d #{rbenv_root_path}/versions ]")
-          rbenv_installed_rubies = capture(:ls, '-1', "#{rbenv_root_path}/versions").split("\n")
-          rbenv_installed_rubies.map!(&:strip)
-        else
-          warn("Could not look up installed versions from missing '.rbenv/versions' directory. This is probably the first ruby install for this rbenv.")
-          []
-        end
-      end
-
-      def rbenv_exec(*args)
-        execute(:rbenv, :exec, *args)
+      def ruby_installed_versions
+        ruby_installed_versions = capture(:ruby_installed_versions).split("\n")
+        ruby_installed_versions.map!(&:strip)
+        warn('Could not look up installed versions. This is probably the first ruby install.') if ruby_installed_versions.empty?
+        ruby_installed_versions
       end
 
       def gem_installed?(name, version = nil)
         if version
-          test(:rbenv, :exec, "gem query --quiet --installed --version '#{version}' --name-matches '^#{name}$'")
+          test(:ruby_installed_gem, name, '--version', "'#{version}'")
         else
-          test(:rbenv, :exec, :gem, :query, "--quiet --installed --name-matches ^#{name}$")
+          test(:ruby_installed_gem, name)
         end
       end
 
       def gem_install(name, version = nil, force = false)
         if version
-          rbenv_exec('gem install', name, '--no-document', '--version', "'#{version}'", force ? '--force' : '')
+          execute(:ruby_install_gem, name, '--version', "'#{version}'", force ? '--force' : '')
         else
-          rbenv_exec('gem install', name, '--no-document')
+          execute(:ruby_install_gem, name)
         end
-      end
-
-      def rubygems_install(version)
-        rbenv_exec("gem update --no-document --system '#{version}'")
       end
 
       def managed_nodejs?

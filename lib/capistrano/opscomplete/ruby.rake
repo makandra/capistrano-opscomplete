@@ -9,18 +9,11 @@ namespace :opscomplete do
   end
 
   namespace :ruby do
-    # desc 'Rehash rbenv shims (run this after installing executables).'
-    task :rehash do
-      on roles fetch(:rbenv_roles, :all) do
-        execute(:rbenv, :rehash)
-      end
-    end
-
-    desc 'Check if rbenv global Ruby version is set according to application\'s .ruby-version.'
+    desc 'Check if Ruby version is set according to application\'s .ruby-version.'
     task :check do
       on roles fetch(:rbenv_roles, :all) do |host|
         warn("#{host}: Managed Ruby environment! Won't do any changes to ruby version.") if managed_ruby?
-        unless capture(:rbenv, :global) == app_ruby_version
+        unless capture(:ruby_get_current_version) == app_ruby_version
           raise Capistrano::ValidationError,
                 "#{host}: Ruby version is not set according to application\'s .ruby-version file. Use cap opscomplete:ruby:ensure."
         end
@@ -28,61 +21,58 @@ namespace :opscomplete do
       end
     end
 
-    # desc 'Install rbenv plugin ruby-build'
+    desc 'Install Ruby version management tool dependencies'
     task :install_ruby_build do
       on roles fetch(:rbenv_roles, :all) do
-        next if test "[ -d #{rbenv_ruby_build_path} ]"
-        execute :git, :clone, ruby_build_repo_url, rbenv_ruby_build_path
+        execute(:ruby_update_management_tool, :install_build)
       end
     end
 
-    # desc 'Update rbenv plugin ruby-build'
+    desc 'Update Ruby version management tool'
     task :update_ruby_build do
       on roles fetch(:rbenv_roles, :all) do
-        if test "[ -d #{rbenv_ruby_build_path} ]"
-          within rbenv_ruby_build_path do
-            execute :git, :pull, '-q'
-          end
-        else
-          warn('Could not find ruby-build.')
-        end
+        execute(:ruby_update_management_tool, :update_build)
       end
     end
 
-    # desc 'Install bundler gem'
+    desc 'Rehash shims (run this after installing executables).'
+    task :rehash do
+      on roles fetch(:rbenv_roles, :all) do
+        execute(:ruby_update_management_tool, :rehash)
+      end
+    end
+
+    desc 'Install bundler gem'
     task :install_bundler do
       on roles fetch(:rbenv_roles, :all) do
         # manually specified version will take precedence
         specific_bundler_version = fetch(:bundler_version, app_gemfile_bundled_with_version)
-
         if specific_bundler_version
           # We have to set force = true to overwrite the binary
           gem_install('bundler', specific_bundler_version, true) unless gem_installed?('bundler', specific_bundler_version)
         else
           gem_install('bundler') unless gem_installed?('bundler')
         end
-        set :rbenv_needs_rehash, true
       end
     end
 
-    # desc 'Install geordi gem'
+    desc 'Install geordi gem'
     task :install_geordi do
       on roles fetch(:rbenv_roles, :all) do
         gem_install('geordi') unless gem_installed?('geordi')
-        set :rbenv_needs_rehash, true
       end
     end
 
+    desc 'Install RubyGems'
     task :install_rubygems do
       on roles fetch(:rbenv_roles, :all) do
-        # if no rubygems_version was set, we use and don't check the rubygems version installed by rbenv
+        # if no rubygems_version was set, we use and don't check the installed rubygems version
         if fetch(:rubygems_version, false)
-          current_rubygems_version = capture(:rbenv, :exec, :gem, '--version').chomp
+          current_rubygems_version = capture(:ruby_get_current_version, :rubygems).chomp
           info("Ensuring requested RubyGems version #{fetch(:rubygems_version)}")
           next if current_rubygems_version == fetch(:rubygems_version)
           info("Previously installed RubyGems version was #{current_rubygems_version}")
-          rbenv_exec(:gem, :update, '--no-document', '--system', "'#{fetch(:rubygems_version)}'")
-          set :rbenv_needs_rehash, true
+          execute(:ruby_install_version, :rubygems, "'#{fetch(:rubygems_version)}'")
         end
       end
     end
@@ -94,27 +84,26 @@ namespace :opscomplete do
         if managed_ruby?
           raise Capistrano::ValidationError, "#{host}: Managed Ruby environment! Won't do any changes to Ruby version."
         end
-        if rbenv_installed_rubies.include?(app_ruby_version)
+        if ruby_installed_versions.include?(app_ruby_version)
           info("#{host}: Ruby #{app_ruby_version} is installed.")
-        elsif rbenv_installable_rubies.include?(app_ruby_version)
+        elsif ruby_installable_versions.include?(app_ruby_version)
           info("#{host}: Configured Ruby version is not installed, but available for installation.")
           with tmpdir: fetch(:tmp_dir) do
-            execute(:rbenv, :install, "'#{app_ruby_version}'")
+            execute(:ruby_install_version, "'#{app_ruby_version}'")
           end
-          set :rbenv_needs_rehash, true
         else
           raise Capistrano::ValidationError,
-                "#{host}: Configured Ruby version is neither installed nor installable using ruby-install."
+                "#{host}: Configured Ruby version is neither installed nor installable."
         end
-        unless capture(:rbenv, :global) == app_ruby_version
+        unless capture(:ruby_get_current_version) == app_ruby_version
           set :ruby_modified, true
-          execute(:rbenv, :global, "'#{app_ruby_version}'")
+          execute(:ruby_set_version, "'#{app_ruby_version}'")
         end
       end
       invoke('opscomplete:ruby:install_rubygems')
       invoke('opscomplete:ruby:install_bundler')
       invoke('opscomplete:ruby:install_geordi')
-      invoke('opscomplete:ruby:rehash') if fetch(:rbenv_needs_rehash, false)
+      invoke('opscomplete:ruby:rehash')
     end
 
     desc 'resets the global ruby version and gems to Gemfile and .ruby-version in current_path.'
@@ -144,10 +133,10 @@ namespace :opscomplete do
     task :broken_gems_warning do
       on roles fetch(:rbenv_roles, :all) do |host|
         if fetch(:ruby_modified, false)
-          warn("Deploy failed and the ruby version has been modified in this deploy.")
-          warn("If this was a minor ruby version upgrade your running application may run into issues with native gem extensions.")
-          warn("If your deploy failed before deploy:symlink:release you may run bundle exec `cap #{fetch(:stage)} opscomplete:ruby:reset`.")
-          warn("Please refer https://makandracards.com/makandra/477884-bundler-in-deploy-mode-shares-gems-between-patch-level-ruby-versions")
+          warn('Deploy failed and the ruby version has been modified in this deploy.')
+          warn('If this was a minor ruby version upgrade your running application may run into issues with native gem extensions.')
+          warn("If your deploy failed before deploy:symlink:release you may run bundle exec 'cap #{fetch(:stage)} opscomplete:ruby:reset'.")
+          warn('Please refer https://makandracards.com/makandra/477884-bundler-in-deploy-mode-shares-gems-between-patch-level-ruby-versions')
         else
           debug("#{host}: Ruby not modified in current deploy.")
         end
