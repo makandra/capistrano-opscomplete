@@ -111,11 +111,11 @@ More specifically this task will:
       1) The value of `:opscomplete_ruby_version` from your capistrano config. Leave this empty unless you want to override the desired version.
       2) A file in the `release_path` on the server (e.g. `/var/www/staging.myapp.biz/releases/20180523234205/.ruby-version`)
       3) A file in the current working directory of your local checkout (e.g. `/home/user/code/myapp/.ruby-version`)
-    - If the desired version is not installed, it checks if it can be installed using `ruby-build` and installs it.
-    - Check if `rbenv global` version is set according to application's `.ruby-version` file. Change it if required.
+    - If the desired version is not installed, it checks if it can be installed and installs it.
+    - Check if the global version is set according to application's `.ruby-version` file. Change it if required.
     - Install `bundler`. It is tried to determine the version that was used to create the `Gemfile.lock` (`BUNDLED WITH`) if it is present.
     - Install `geordi` gem if required.
-    - Run `rbenv rehash` if required.
+    - Rehash the shims if required.
 
 **Note:** If, for any reason, no `.ruby-version` file can be found in your release or current working directory, you may set the following option in `deploy.rb`:
 
