@@ -43,6 +43,8 @@ namespace :opscomplete do
             execute(:nodejs_install_version, "'#{app_nodejs_version}'")
           end
         else
+          info("#{host}: Check if the configured Node.js version is part of the installable versions")
+          execute :nodejs_installable_versions
           raise Capistrano::ValidationError,
                 "#{host}: Configured Node.js version is neither installed nor installable."
         end
