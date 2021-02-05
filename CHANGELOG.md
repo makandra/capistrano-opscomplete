@@ -1,3 +1,11 @@
+## [0.6.7] - 2021-02-05
+
+### Fixed
+- Fix missing command in opscomplete:nodejs:check
+
+### Changed
+- Improve error message for wrong Node.js version
+
 ## [0.6.6] - 2020-12-08
 
 ### Fixed
