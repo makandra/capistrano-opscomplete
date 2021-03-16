@@ -1,3 +1,9 @@
+## [1.0.0] - 2021-03-16
+
+### Changed
+- Version bump to 1.0 and switch to semantic versioning: There were no breaking changes
+- Remove rbenv dependency for our opscomplete infrastructure
+
 ## [0.6.7] - 2021-02-05
 
 ### Fixed
