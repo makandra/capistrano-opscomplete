@@ -82,11 +82,10 @@ module Capistrano
       end
 
       def managed_nodejs?
-        test("[ -f ${HOME}/.nodejs_managed_by_makandra ]")
+        test('[ -f ${HOME}/.nodejs_managed_by_makandra ]')
       end
 
       def app_nodejs_version
-
         # 1) Get version from capistrano configuration (highest precedence, 'override')
         if fetch(:opscomplete_nodejs_version)
           debug("Using version from :opscomplete_nodejs_version setting: #{fetch(:opscomplete_nodejs_version)}.")
