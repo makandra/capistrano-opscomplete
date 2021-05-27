@@ -111,6 +111,10 @@ module Capistrano
         nodejs_installed_versions = capture(:nodejs_installed_versions).split("\n")
         nodejs_installed_versions.map!(&:strip)
       end
+
+      def validation_error!(message)
+        raise Capistrano::ValidationError, message unless dry_run?
+      end
     end
   end
 end
