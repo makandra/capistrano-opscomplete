@@ -1,3 +1,8 @@
+## [1.0.1] - 2021-03-16
+
+### Fixed
+- Made it possible to use `--dry-run` ([#27](https://github.com/makandra/capistrano-opscomplete/issues/27)
+
 ## [1.0.0] - 2021-03-16
 
 ### Changed
