@@ -14,8 +14,7 @@ namespace :opscomplete do
       on roles fetch(:rbenv_roles, :all) do |host|
         warn("#{host}: Managed Ruby environment! Won't do any changes to ruby version.") if managed_ruby?
         unless capture(:ruby_get_current_version) == app_ruby_version
-          raise Capistrano::ValidationError,
-                "#{host}: Ruby version is not set according to application\'s .ruby-version file. Use cap opscomplete:ruby:ensure."
+          validation_error!("#{host}: Ruby version is not set according to application\'s .ruby-version file. Use cap opscomplete:ruby:ensure.")
         end
         info("#{host}: Ruby #{app_ruby_version} is installed.")
       end
@@ -82,7 +81,7 @@ namespace :opscomplete do
       invoke('opscomplete:ruby:update_ruby_build')
       on roles fetch(:rbenv_roles, :all) do |host|
         if managed_ruby?
-          raise Capistrano::ValidationError, "#{host}: Managed Ruby environment! Won't do any changes to Ruby version."
+          validation_error!("#{host}: Managed Ruby environment! Won't do any changes to Ruby version.")
         end
         if ruby_installed_versions.include?(app_ruby_version)
           info("#{host}: Ruby #{app_ruby_version} is installed.")
@@ -92,8 +91,7 @@ namespace :opscomplete do
             execute(:ruby_install_version, "'#{app_ruby_version}'")
           end
         else
-          raise Capistrano::ValidationError,
-                "#{host}: Configured Ruby version is neither installed nor installable."
+          validation_error!("#{host}: Configured Ruby version is neither installed nor installable.")
         end
         unless capture(:ruby_get_current_version) == app_ruby_version
           set :ruby_modified, true
@@ -114,16 +112,14 @@ namespace :opscomplete do
           if test("[ -f #{current_ruby_version_file_path} ]")
             execute(:rbenv, :global, capture(:cat, current_ruby_version_file_path))
           else
-            raise Capistrano::ValidationError,
-                  "#{host}: Missing .ruby-version in #{current_path}. Won't set a new global version."
+            validation_error!("#{host}: Missing .ruby-version in #{current_path}. Won't set a new global version.")
           end
           if test("[ -f '#{current_path}/.bundle/config' ]")
             debug("#{host}: Found #{current_path}/.bundle/config, running bundle pristine.")
             set :bundle_gemfile, -> { current_path.join('Gemfile') }
             execute(:bundle, :pristine)
           else
-            raise Capistrano::ValidationError,
-              "Unable to find #{current_path}/.bundle/config, won't run bundle pristine."
+            validation_error!("Unable to find #{current_path}/.bundle/config, won't run bundle pristine.")
           end
         end
       end

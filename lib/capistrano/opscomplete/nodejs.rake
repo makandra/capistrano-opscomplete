@@ -14,8 +14,7 @@ namespace :opscomplete do
       on roles fetch(:nodejs_roles, :all) do |host|
         warn("#{host}: Managed Node.js environment! Won't do any changes to nodejs version.") if managed_nodejs?
         unless capture(:nodejs_get_version, release_path) == app_nodejs_version
-          raise Capistrano::ValidationError,
-                "#{host}: Node.js version is not set according to application\'s .node-version or .nvmrc file. Use cap opscomplete:nodejs:ensure."
+          validation_error!("#{host}: Node.js version is not set according to application\'s .node-version or .nvmrc file. Use cap opscomplete:nodejs:ensure.")
         end
         info("#{host}: Node.js #{app_nodejs_version} is installed.")
       end
@@ -33,7 +32,7 @@ namespace :opscomplete do
       invoke('opscomplete:nodejs:update_nodejs_build')
       on roles fetch(:nodejs_roles, :all) do |host|
         if managed_nodejs?
-          raise Capistrano::ValidationError, "#{host}: Managed Node.js environment! Won't do any changes to Node.js version."
+          validation_error!("#{host}: Managed Node.js environment! Won't do any changes to Node.js version.")
         end
         if nodejs_installed_versions.include?(app_nodejs_version)
           info("#{host}: Node.js #{app_nodejs_version} is installed.")
@@ -45,8 +44,7 @@ namespace :opscomplete do
         else
           info("#{host}: Check if the configured Node.js version is part of the installable versions")
           execute :nodejs_installable_versions
-          raise Capistrano::ValidationError,
-                "#{host}: Configured Node.js version is neither installed nor installable."
+          validation_error!("#{host}: Configured Node.js version is neither installed nor installable.")
         end
         execute(:nodejs_set_version, "'#{app_nodejs_version}'")
       end
