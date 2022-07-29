@@ -1,3 +1,7 @@
+## [1.0.2] - 2022-07-29
+### Changed
+- Improve error message for missing Node.js version
+
 ## [1.0.1] - 2021-03-16
 
 ### Fixed
