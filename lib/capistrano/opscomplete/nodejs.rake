@@ -42,9 +42,11 @@ namespace :opscomplete do
             execute(:nodejs_install_version, "'#{app_nodejs_version}'")
           end
         else
-          info("#{host}: Check if the configured Node.js version is part of the installable versions")
-          execute :nodejs_installable_versions
-          validation_error!("#{host}: Configured Node.js version is neither installed nor installable.")
+          error("#{host}: Check if the configured Node.js version: #{app_nodejs_version} is not an installable version")
+          info("These are the ten latest versions:")
+          info(nodejs_installable_versions.slice(-10,10).join(', '))
+
+          validation_error!("#{host}: Configured Node.js version: #{app_nodejs_version} is not installable.")
         end
         execute(:nodejs_set_version, "'#{app_nodejs_version}'")
       end
