@@ -43,8 +43,8 @@ namespace :opscomplete do
           end
         else
           error("#{host}: Check if the configured Node.js version: #{app_nodejs_version} is not an installable version")
-          info("These are the ten latest versions:")
-          info(nodejs_installable_versions.slice(-10,10).join(', '))
+          info('These are the ten latest versions:')
+          info(nodejs_installable_versions.slice(-10, 10).join(', '))
 
           validation_error!("#{host}: Configured Node.js version: #{app_nodejs_version} is not installable.")
         end
