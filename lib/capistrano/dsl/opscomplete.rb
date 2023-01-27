@@ -115,6 +115,20 @@ module Capistrano
       def validation_error!(message)
         raise Capistrano::ValidationError, message unless dry_run?
       end
+
+      def supervisor_configured?
+        test('test -z $(find ~/supervisord/conf.d -maxdepth 0 -empty 2> /dev/null)')
+      end
+
+      def supervisor_send_signal(signal, program_name)
+        within release_path do
+          if program_name
+            execute :supervisor_signal_procs, signal, program_name
+          else
+            execute :supervisor_signal_procs, signal
+          end
+        end
+      end
     end
   end
 end
