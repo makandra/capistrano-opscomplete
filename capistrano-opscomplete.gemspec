@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
 
   spec.required_rubygems_version = '>=2.0.1'
 
+  spec.add_development_dependency 'rake', '~> 13'
   spec.add_development_dependency 'makandra-rubocop', '~> 4'
   spec.add_development_dependency 'bundler', '~> 2'
 
