@@ -55,6 +55,7 @@ DEPENDENCIES
   bundler (~> 2)
   capistrano-opscomplete!
   makandra-rubocop (~> 4)
+  rake (~> 13)
 
 BUNDLED WITH
    2.3.10
