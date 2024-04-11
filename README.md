@@ -159,7 +159,7 @@ after 'deploy:updating', 'opscomplete:ruby:ensure'
 
 ## Managing your nodejs version with `capistrano-opscomplete`
 
-You can manage NodeJS also with `capistrano-opscomplete`. It will check the `.nvmrc`, `.node-version` and `.tool-versions` in the release direcotry (in this order) or you can configure it with `:opscomplete_nodejs_version` in your capistrano configuration.
+You can manage NodeJS also with `capistrano-opscomplete`. It will check the `.nvmrc`, `.node-version` and `.tool-versions` in the release directory (in this order) or you can configure it with `:opscomplete_nodejs_version` in your capistrano configuration.
 
 Include the gem in your applications Gemfile:
 
@@ -174,6 +174,8 @@ An example configuration could look like this:
 # After unpacking your release, before bundling, compiling assets, ...
 after 'deploy:updating', 'opscomplete:nodejs:ensure'
 ```
+
+The version for the NodeJS installation has to be a specific version and not a floating version like, e.g. lts/gallium.
 
 ## Contributing
 
