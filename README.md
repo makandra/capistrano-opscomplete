@@ -7,7 +7,7 @@ This gem provides capistrano tasks for convenient deployment to a makandra [OpsC
 Include the gem in your applications Gemfile:
 
 ```ruby
-gem 'capistrano-opscomplete'
+gem 'capistrano-opscomplete', require: false
 ```
 
 And then execute:
