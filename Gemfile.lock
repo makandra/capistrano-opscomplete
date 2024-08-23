@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    capistrano-opscomplete (1.1.0)
+    capistrano-opscomplete (1.2.0)
       capistrano (>= 3.0, < 4.0.0)
       rake
 
