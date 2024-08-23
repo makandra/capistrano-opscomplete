@@ -173,6 +173,8 @@ An example configuration could look like this:
 ```ruby
 # After unpacking your release, before bundling, compiling assets, ...
 after 'deploy:updating', 'opscomplete:nodejs:ensure'
+# reload puma
+after 'deploy:published', 'opscomplete:puma:reload'
 ```
 
 The version for the NodeJS installation has to be a specific version and not a floating version like, e.g. lts/gallium.

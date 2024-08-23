@@ -1,3 +1,7 @@
+## [1.1.0] - 2024-08-23
+### Changed
+- Added a feature to reload the puma systemd user service.
+
 ## [1.0.2] - 2022-07-29
 ### Changed
 - Improve error message for missing Node.js version
