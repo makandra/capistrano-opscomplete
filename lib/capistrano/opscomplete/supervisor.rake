@@ -10,6 +10,15 @@ namespace :opscomplete do
       end
     end
 
+    desc 'Remove supervisor configuration and stop all Procfile processes on non :procfile_role servers.'
+    task :disable do
+      on roles(:all) - roles(fetch(:procfile_role, :app)) do
+        within release_path do
+          execute :supervisor_disable
+        end
+      end
+    end
+
     desc 'Reread the supervisor configuration and (re)start all Procfile processes'
     task :restart_procs do
       on roles fetch(:procfile_role, :app) do
