@@ -52,8 +52,11 @@ And in case you enabled [`Procfile support`](https://makandracards.com/opscomple
 e.g. like this:
 
 ```ruby
-# Update and Restart supervisor config
+# Update supervisor config
 after 'deploy:updating', 'opscomplete:supervisor:gen_config'
+# Stop processes and remove config on non :procfile_role servers
+after 'deploy:published', 'opscomplete:supervisor:disable'
+# Restart supervisor processes
 after 'deploy:published', 'opscomplete:supervisor:restart_procs'
 ```
 
