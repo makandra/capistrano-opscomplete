@@ -1,3 +1,7 @@
+## [1.3.0] - 2025-02-18
+### Added
+- Add new capistrano task (`opscomplete:supervisor:disable`) which disables supervisor on non-procfile servers
+
 ## [1.2.0] - 2024-08-23
 ### Changed
 - Added a feature to restart Puma
