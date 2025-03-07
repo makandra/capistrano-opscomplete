@@ -89,32 +89,48 @@ module Capistrano
         # 1) Get version from capistrano configuration (highest precedence, 'override')
         if fetch(:opscomplete_nodejs_version)
           debug("Using version from :opscomplete_nodejs_version setting: #{fetch(:opscomplete_nodejs_version)}.")
-          fetch(:opscomplete_nodejs_version)
+          app_version = fetch(:opscomplete_nodejs_version)
 
         # 2) Get version from version file in release dir (after deploy:updating, before deploy:updated)
         elsif capture(:nodejs_get_version, release_path)
           debug("Using version from server's release_dir/.nvmrc, .node-version or .tool-versions file: #{capture(:nodejs_get_version, release_path)}")
-          capture(:nodejs_get_version, release_path)
+          app_version = capture(:nodejs_get_version, release_path)
 
         else
           raise Capistrano::ValidationError, 'Could not find application\'s Node.js version. Consider setting opscomplete_ruby_version.'
         end
+
+        normalize_nodejs_version(app_version)
       end
 
       def nodejs_installable_versions
         nodejs_installable_versions = capture(:nodejs_installable_versions).split("\n")
-        nodejs_installable_versions.map!(&:strip)
-        nodejs_installable_versions
+        nodejs_installable_versions.map { |version| normalize_nodejs_version(version) }
       end
 
       def nodejs_installed_versions
         nodejs_installed_versions = capture(:nodejs_installed_versions).split("\n")
-        nodejs_installed_versions.map!(&:strip)
+        nodejs_installed_versions.map { |version| normalize_nodejs_version(version) }
       end
 
       def validation_error!(message)
         raise Capistrano::ValidationError, message unless dry_run?
       end
+
+      private
+
+      def normalize_nodejs_version(version)
+        version = version.strip
+        # Make sure the versions returned by our Node version manager have the same format
+        # as the one in our .nvmrc or .tools-versions:
+        #
+        # - In .nvmrc, we often document node versions as "1.2.3". But some people use "v1.2.3".
+        # - When asking NVM for Node versions, it gives us "v1.2.3".
+        # - When asking asdf for Node versions, it gives us "1.2.3" (without the leading "v").
+        version = version.sub(/\A[vV]/, '') # remove leading "v" or "V"
+        version
+      end
+
     end
   end
 end
