@@ -1,3 +1,7 @@
+## [1.3.1] - 2025-03-07
+### Fixed
+- Fix error with nvm: "Configured Node.js version: X.Y.Z is not installable"
+
 ## [1.3.0] - 2025-02-18
 ### Added
 - Add new capistrano task (`opscomplete:supervisor:disable`) which disables supervisor on non-procfile servers
