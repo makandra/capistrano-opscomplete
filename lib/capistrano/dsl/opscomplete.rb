@@ -97,7 +97,7 @@ module Capistrano
           app_version = capture(:nodejs_get_version, release_path)
 
         else
-          raise Capistrano::ValidationError, 'Could not find application\'s Node.js version. Consider setting opscomplete_ruby_version.'
+          raise Capistrano::ValidationError, 'Could not find application\'s Node.js version. Consider setting opscomplete_nodejs_version.'
         end
 
         normalize_nodejs_version(app_version)
