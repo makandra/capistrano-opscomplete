@@ -117,6 +117,18 @@ module Capistrano
         raise Capistrano::ValidationError, message unless dry_run?
       end
 
+      def app_corepack_version
+        if fetch(:opscomplete_corepack_version)
+          debug("Using version from :opscomplete_corepack_version setting: #{fetch(:opscomplete_corepack_version)}.")
+          corepack_version = fetch(:opscomplete_corepack_version)
+
+        else
+          corepack_version = nil
+        end
+
+        corepack_version
+      end
+
       private
 
       def normalize_nodejs_version(version)
