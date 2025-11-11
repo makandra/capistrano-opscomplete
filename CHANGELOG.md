@@ -1,3 +1,8 @@
+## [1.4.0] - 2025-11-11
+### Added
+- Extended `opscomplete:nodejs:ensure` task with option to manage and install `corepack`
+- Fixed Node.js version missing error message
+
 ## [1.3.1] - 2025-03-07
 ### Fixed
 - Fix error with nvm: "Configured Node.js version: X.Y.Z is not installable"
