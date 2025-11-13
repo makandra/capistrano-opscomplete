@@ -182,6 +182,18 @@ after 'deploy:published', 'opscomplete:puma:reload'
 
 The version for the NodeJS installation has to be a specific version and not a floating version like, e.g. lts/gallium.
 
+### Using Corepack
+
+You may use Corepack to control your project's package manager, e.g. to use a modern version of Yarn or pnpm.
+
+`capistrano-opscomplete` can install and enable Corepack for you during deployment. To do so, set the version with `:opscomplete_corepack_version` in your capistrano configuration. Then, add a [hook](#using-capistrano-hooks) in your capistrano configuration (e.g. `deploy.rb`), for example:
+
+```ruby
+set :opscomplete_corepack_version, 'latest'
+
+after 'deploy:updating', 'opscomplete:nodejs:ensure'
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome. Don't hesitate to [open a new issue](https://github.com/makandra/capistrano-opscomplete/issues/new).

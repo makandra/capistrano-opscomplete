@@ -97,7 +97,7 @@ module Capistrano
           app_version = capture(:nodejs_get_version, release_path)
 
         else
-          raise Capistrano::ValidationError, 'Could not find application\'s Node.js version. Consider setting opscomplete_ruby_version.'
+          raise Capistrano::ValidationError, 'Could not find application\'s Node.js version. Consider setting opscomplete_nodejs_version.'
         end
 
         normalize_nodejs_version(app_version)
@@ -115,6 +115,18 @@ module Capistrano
 
       def validation_error!(message)
         raise Capistrano::ValidationError, message unless dry_run?
+      end
+
+      def app_corepack_version
+        if fetch(:opscomplete_corepack_version)
+          debug("Using version from :opscomplete_corepack_version setting: #{fetch(:opscomplete_corepack_version)}.")
+          corepack_version = fetch(:opscomplete_corepack_version)
+
+        else
+          corepack_version = nil
+        end
+
+        corepack_version
       end
 
       private

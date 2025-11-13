@@ -49,6 +49,9 @@ namespace :opscomplete do
           validation_error!("#{host}: Configured Node.js version: #{app_nodejs_version} is not installable.")
         end
         execute(:nodejs_set_version, "'#{app_nodejs_version}'")
+        unless app_corepack_version.nil?
+          execute(:nodejs_install_corepack_version, "'#{app_corepack_version}'")
+        end
       end
     end
   end
